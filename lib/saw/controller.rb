@@ -1,11 +1,10 @@
 module Saw
   module Controller
     def saw doing=nil, json_data=nil
-      return unless current_user
-
+      
       return if request.fullpath.include? "/admin/"
 
-      user_id     = current_user.id
+      user_id     = current_user.id ||= nil
       session_id  = request.session_options[:id]
       remote_host = request.remote_ip
       remote_host = request.env["HTTP_X_FORWARDED_FOR"] if remote_host.blank?
@@ -16,7 +15,7 @@ module Saw
       doing       = doing.to_s.strip
       doing       = action if doing.blank?
 
-      visit = Visit.where('user_id = ? and session_id = ? ', user_id, session_id).first
+      visit = Visit.where('user_id = ? and session_id = ? ', user_id, session_id).first if user_id
 
       visit ||= Visit.create  :user_id      => user_id,
                               :session_id   => session_id,
