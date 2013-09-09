@@ -4,7 +4,7 @@ module Saw
       
       return if request.fullpath.include? "/admin/"
 
-      user_id     = current_user.id ||= nil
+      user_id     = current_user ? current_user.id : nil
       session_id  = request.session_options[:id]
       remote_host = request.remote_ip
       remote_host = request.env["HTTP_X_FORWARDED_FOR"] if remote_host.blank?
